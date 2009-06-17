@@ -1,0 +1,29 @@
+# The network (COM) port the reader is attached to.
+# Can find this with XM3 Manage
+port: 3
+
+# The address on the network where the reader is found.
+# Can find this with XM3 Manage
+address: 23
+
+# The baud rate to connect at. Can be 9600, 19200, or  38400
+# Can find this with XM3 Manage
+network_speed: 19200
+
+# The installer PIN for the reader.
+# Can find this with XM3 Manage but defaults to 123456789.
+password: 123456789
+
+# Delay in seconds before the same person can trigger the door again.
+reentry_delay: 5
+
+# Path to the music player program.
+music_player: 'C:\Program Files\Winamp\winamp.exe'
+
+# Path to the songs.
+music_repo: 'C:\Theme Music\Songs'
+
+# Only play songs between these hours.
+# Same as (start_hour...end_hour) in ruby (note non-inclusive range).
+start_hour: 6
+end_hour: 11
