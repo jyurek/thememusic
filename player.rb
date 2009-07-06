@@ -1,4 +1,5 @@
 require 'ostruct'
+begin; require 'win32ole'; rescue LoadError; puts "Test Mode"; end
 
 class Player
 
@@ -87,7 +88,9 @@ class Player
     new(config).ensuring_connection do |player|
       player.detect_user!
       sleep 0.5
-      player.play_for(player.last_access_user.Name) if player.should_play?
+      name = player.last_access_user.Name
+      name = name.empty? ? "No One" : name
+      player.play_for(name) if player.should_play?
     end
   end
 

@@ -27,20 +27,33 @@ class PlayerTest < Test::Unit::TestCase
           returns(["songs/Moe Syzslak.mp3"])
     end
 
-    should "detect users and play while ensuing a connection when run" do
-      @player.last_access_user = OpenStruct.new(:Name => "Moe Syzslak")
-      @player.stubs(:ensuring_connection).yields(@player)
-      @player.stubs(:detect_user!)
-      @player.stubs(:should_play?).returns(true)
-      @player.stubs(:play_for)
-      Player.stubs(:new).returns(@player)
+    context "detect users and play while ensuing a connection when run" do
+      setup do
+        @player.last_access_user = OpenStruct.new(:Name => "Moe Syzslak")
+        @player.stubs(:ensuring_connection).yields(@player)
+        @player.stubs(:detect_user!)
+        @player.stubs(:should_play?).returns(true)
+        @player.stubs(:play_for)
+        Player.stubs(:new).returns(@player)
+      end
 
-      Player.run(config)
+      should "call the right things" do
+        Player.run(config)
+        assert_received(@player, :ensuring_connection)
+        assert_received(@player, :detect_user!)
+        assert_received(@player, :should_play?)
+      end
 
-      assert_received(@player, :ensuring_connection)
-      assert_received(@player, :detect_user!)
-      assert_received(@player, :should_play?)
-      assert_received(@player, :play_for){|p| p.with("Moe Syzslak") }
+      should "play the right song when the person has a name" do
+        Player.run(config)
+        assert_received(@player, :play_for){|p| p.with("Moe Syzslak") }
+      end
+
+      should "play the right song when the person does not have a name" do
+        @player.last_access_user = OpenStruct.new(:Name => "")
+        Player.run(config)
+        assert_received(@player, :play_for){|p| p.with("No One") }
+      end
     end
 
     context "changing connection possibilities" do
